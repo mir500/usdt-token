@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add USDT Token</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f3f3f3;
+      text-align: center;
+      padding: 50px;
+    }
+    button {
+      background-color: #f6851b;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e2761b;
+    }
+  </style>
+</head>
+<body>
+  <h1>افزودن توکن USDT به MetaMask</h1>
+  <button onclick="addToken()">افزودن توکن</button>
+  <p id="status" style="margin-top: 20px; color: red;"></p>
+
+  <script>
+    async function addToken() {
+      if (!window.ethereum || !window.ethereum.isMetaMask) {
+        document.getElementById("status").textContent = "MetaMask شناسایی نشد.";
+        return;
+      }
+
+      const tokenAddress = "0x184B8F455c2eC08B5E290F1fF0c8A630C242Aeb4";
+      const tokenSymbol = "USDT";
+      const tokenDecimals = 18;
+      const tokenImage = "https://gateway.pinata.cloud/ipfs/bafkreickdhlzaeajcyqpxopdolo57rfzkttbrlyfujo2sjszc22z3zohdu";
+
+      try {
+        const wasAdded = await window.ethereum.request({
+          method: 'wallet_watchAsset',
+          params: {
+            type: 'ERC20',
+            options: {
+              address: tokenAddress,
+              symbol: tokenSymbol,
+              decimals: tokenDecimals,
+              image: tokenImage,
+            },
+          },
+        });
+
+        if (wasAdded) {
+          document.getElementById("status").textContent = "✅ توکن با موفقیت افزوده شد.";
+        } else {
+          document.getElementById("status").textContent = "❌ افزودن توکن توسط کاربر لغو شد.";
+        }
+      } catch (error) {
+        document.getElementById("status").textContent = "⚠️ خطا در ارتباط با MetaMask.";
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
